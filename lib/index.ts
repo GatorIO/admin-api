@@ -65,6 +65,35 @@ export function authorize(params: any, callback: (err?: _errors.APIError, result
 }
 
 /**
+ * Set the authorization information on the session.
+ * @param req
+ * @param auth
+ */
+export function setSessionAuth(req, auth: Authorization) {
+    req.session.accessToken = auth.accessToken;
+    req.session.user = auth.user;
+    req.session.expiration = auth.expiration;
+    req.session.account = auth.account;
+    req.session.projects = auth.projects;
+    req.session.projectId = auth.projectId;
+    req.session.currentProjectId = auth.currentProjectId;
+}
+
+/**
+ * Clear all authorization attributes from the session
+ * @param req
+ */
+export function clearSessionAuth(req) {
+    delete req.session.accessToken;
+    delete req.session.user;
+    delete req.session.expiration;
+    delete req.session.account;
+    delete req.session.projects;
+    delete req.session.projectId;
+    delete req.session.currentProjectId;
+}
+
+/**
  * If the user is authenticated in the session, call next() to call the next request handler.
  * If the user is not authenticated, redirect to the login page.
  * @param req
@@ -97,13 +126,7 @@ export function authenticate(req, res, next) {
         authorize(authParams, function(err, authObject) {
 
             if (!err && authObject) {
-                req.session.accessToken = authObject.accessToken;
-                req.session.user = authObject.user;
-                req.session.expiration = authObject.expiration;
-                req.session.account = authObject.account;
-                req.session.projects = authObject.projects;
-                req.session.projectId = authObject.projectId;
-                req.session.currentProjectId = authObject.currentProjectId;
+                setSessionAuth(req, authObject);
                 return next();
             } else {
 
@@ -154,15 +177,8 @@ export function reauthenticate(req, res, next) {
  */
 export function logout(req, res) {
 
-    if (req.session) {
-        delete req.session.accessToken;
-        delete req.session.user;
-        delete req.session.expiration;
-        delete req.session.account;
-        delete req.session.projects;
-        delete req.session.projectId;
-        delete req.session.currentProjectId;
-    }
+    if (req.session)
+        clearSessionAuth(req);
 
     res.redirect('/login');
 }

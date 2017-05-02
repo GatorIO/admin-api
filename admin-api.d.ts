@@ -196,6 +196,8 @@ declare module 'admin-api' {
     export function login(name:string, password:string, appId:number, callback:(err?:errors.APIError, result?:Authorization) => void);
     export function logout(req:any, res:any);
     export function authorize(params:any, callback:(err?:errors.APIError, result?:Authorization) => void);
+    export function setSessionAuth(req, auth: Authorization);
+    export function clearSessionAuth(req);
     export function log(a1?:any, a2?:any, a3?:any, a4?:any, a5?:any);
 
     export module logs {
