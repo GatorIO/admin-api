@@ -1,4 +1,4 @@
-declare module 'gator-api' {
+declare module 'admin-api' {
     import restify = require('restify');
 
     export let client;
