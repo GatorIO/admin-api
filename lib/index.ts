@@ -2,6 +2,7 @@ import utils = require("node-utils");
 
 import restify = require('restify');
 import _client = require('./client');
+import _sessionStore = require('./admin/sessionStore');
 import _errors = require('./errors');
 import _applications = require('./admin/applications');
 import _users = require('./admin/users');
@@ -14,6 +15,7 @@ import _REST = require('./REST');
 let settings = utils.config.settings();
 
 export let client: restify.Client = _client;
+export let sessionStore = _sessionStore;
 export let errors = _errors;
 export let users = _users;
 export let accounts = _accounts;
@@ -173,14 +175,16 @@ export function reauthenticate(req, res, next) {
 
 /**
  * Clear authorization from session and redirect to the login page.
- * @param res
+ * @param req, res
  */
 export function logout(req, res) {
 
-    if (req.session)
-        clearSessionAuth(req);
+    if (req.session) {
 
-    res.redirect('/login');
+        req.session.destroy(function(err) {
+            res.redirect('/login');
+        });
+    }
 }
 
 /**

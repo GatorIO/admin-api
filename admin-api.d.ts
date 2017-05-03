@@ -2,6 +2,7 @@ declare module 'admin-api' {
     import restify = require('restify');
 
     export let client;
+    export let sessionStore;
 
     export module errors {
 
