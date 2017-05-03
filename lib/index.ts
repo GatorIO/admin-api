@@ -175,7 +175,8 @@ export function reauthenticate(req, res, next) {
 
 /**
  * Clear authorization from session and redirect to the login page.
- * @param req, res
+ * @param req
+ * @param res
  */
 export function logout(req, res) {
 
